@@ -32,7 +32,7 @@ public abstract class NodeDefinition extends Versionable implements Annotatable,
 	private static final long serialVersionUID = 1L;
 //	private static final transient Log LOG = LogFactory.getLog(NodeDefinition.class);
 
-	@XmlTransient
+	@XmlAttribute(name = "id")
 	private Integer id;
 	
 	@XmlTransient

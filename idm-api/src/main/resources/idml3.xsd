@@ -734,8 +734,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:complexType name="schemaObject">
-    
+  <xs:complexType name="schemaObject">    
     <xs:annotation>
       <xs:documentation xml:lang="en">
         TO-DO
