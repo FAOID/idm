@@ -1207,6 +1207,13 @@
             </xs:element>
           </xs:choice>
         </xs:sequence>
+        <xs:attribute name="id" type="xs:nonNegativeInteger">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              TO-DO
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
