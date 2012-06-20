@@ -860,7 +860,7 @@
         </xs:documentation>
       </xs:annotation>      
     </xs:attribute>
-    <xs:attribute name="id" type="xs:nonNegativeInteger">
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
       <xs:annotation>
         <xs:documentation xml:lang="en">
           TO-DO
