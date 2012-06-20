@@ -735,12 +735,13 @@
   </xs:element>
 
   <xs:complexType name="schemaObject">
+    
     <xs:annotation>
       <xs:documentation xml:lang="en">
         TO-DO
       </xs:documentation>
     </xs:annotation>    
-    <xs:sequence>
+    <xs:sequence>       
       <xs:element name="label" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:documentation xml:lang="en">
@@ -849,8 +850,8 @@
           <xs:documentation xml:lang="en">
             Human-readable description of addition details regarding the entity or attribute (e.g. plot size/shape, how the value is obtained).  Used for documentation and software help systems.
           </xs:documentation>
-        </xs:annotation>
-      </xs:element>
+        </xs:annotation>        
+      </xs:element> 
     </xs:sequence>    
     <xs:attribute name="name" type="internalName" use="required">
       <xs:annotation>
@@ -907,6 +908,10 @@
                   </xs:documentation>
               </xs:annotation>
               <xs:unique name="innerEntityChildNames">
+                <xs:selector xpath="*"/>
+                <xs:field xpath="@name"/>
+              </xs:unique>
+              <xs:unique name="uniqueIds">
                 <xs:selector xpath="*"/>
                 <xs:field xpath="@name"/>
               </xs:unique>
