@@ -24,6 +24,7 @@ public class Record {
 	private Survey survey;
 	
 	private Integer id;
+	private Integer survey_id;
 	private ModelVersion modelVersion;
 	private int nextId;
 	private Entity rootEntity;
@@ -129,4 +130,11 @@ public class Record {
 		return nextId++;
 	}
 	
+	public Integer getSurvey_id() {
+		return survey_id;
+	}
+
+	public void setSurvey_id(Integer survey_id) {
+		this.survey_id = survey_id;
+	}	
 }
