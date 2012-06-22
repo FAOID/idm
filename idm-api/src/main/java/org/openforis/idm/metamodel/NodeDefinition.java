@@ -32,9 +32,6 @@ public abstract class NodeDefinition extends Versionable implements Annotatable,
 	private static final long serialVersionUID = 1L;
 //	private static final transient Log LOG = LogFactory.getLog(NodeDefinition.class);
 
-	@XmlAttribute(name = "id")
-	private Integer id;
-	
 	@XmlTransient
 	@XmlParent
 	private NodeDefinition parentDefinition;
@@ -43,6 +40,9 @@ public abstract class NodeDefinition extends Versionable implements Annotatable,
 	@XmlParent
 	@XmlInherited("schema")
 	private Schema schema;
+	
+	@XmlAttribute(name = "id")
+	private Integer id;
 	
 	@XmlAttribute(name = "name")
 	private String name;

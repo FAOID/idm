@@ -25,7 +25,7 @@ import org.openforis.idm.model.Value;
  * @author W. Eko
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name="", propOrder = {"name", "taxonomy", "highestRank", "qualifiers", "relevantExpression", "required", "requiredExpression", "multiple", "minCount", "maxCount", "sinceVersionName", "deprecatedVersionName",
+@XmlType(name="", propOrder = {"id", "name", "taxonomy", "highestRank", "qualifiers", "relevantExpression", "required", "requiredExpression", "multiple", "minCount", "maxCount", "sinceVersionName", "deprecatedVersionName",
 		"labels", "prompts", "descriptions", "attributeDefaults", "checks"})		
 public class TaxonAttributeDefinition extends AttributeDefinition {
 
@@ -79,8 +79,12 @@ public class TaxonAttributeDefinition extends AttributeDefinition {
 	}
 	
 	public List<String> getQualifiers() {
-		String[] exprs = qualifiers.split(",");
-		return Arrays.asList(exprs);
+		if ( qualifiers != null ) {
+			String[] exprs = qualifiers.split(",");
+			return Collections.unmodifiableList(Arrays.asList(exprs));
+		} else {
+			return Collections.emptyList();
+		}
 	}
 	
 }
