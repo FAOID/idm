@@ -71,7 +71,7 @@ public class SurveyUnmarshaller {
 			//cannot read two times the same input stream, so use a temporary byte array
 			byte[] byteArray = IOUtils.toByteArray(is);
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
-			validateAgainstSchema(byteArrayInputStream);
+			//validateAgainstSchema(byteArrayInputStream);
 			
 			Unmarshaller.Listener listener = getListener();
 			unmarshaller.setListener(listener);
@@ -89,8 +89,8 @@ public class SurveyUnmarshaller {
 			return survey;
 		} catch (JAXBException e) {
 			throw new RuntimeException(e);
-		} catch (SAXException e) {
-			throw new RuntimeException(e);
+		/*} catch (SAXException e) {
+			throw new RuntimeException(e);*/
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
