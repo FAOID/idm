@@ -72,6 +72,7 @@ public class EntitySchema extends SchemaSupport<Entity> {
         		
         		// Node
         		readAndCheckFieldNumber(input, FIELD_NODE);
+        		System.out.println("abc definitionId = " + definitionId + ", entity = " + entity + ", input " + input) ;
         		input.mergeObject(node, getSchema(node.getClass()));
         		
         	} else if ( number == FIELD_CHILD_NODE_STATE ){
@@ -82,6 +83,7 @@ public class EntitySchema extends SchemaSupport<Entity> {
         		int childDefnId = input.readInt32();
         		Schema schema = entity.getSchema();
         		NodeDefinition childDefn = schema.getById(childDefnId);
+        		System.out.println("childDefnId = " + childDefnId + ", xyz entity = " + entity + ", input " + input + ", childDefn = " + childDefn) ;
         		entity.childStates.put(childDefn.getName(), state);
         	} else {
             	throw new ProtostuffException("Unexpected field number");
