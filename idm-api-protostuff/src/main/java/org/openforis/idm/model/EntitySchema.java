@@ -14,7 +14,7 @@ import com.dyuproject.protostuff.ProtostuffException;
 /**
  * @author G. Miceli
  * @author S. Ricci
- * 
+ * @author E. Wibowo 
  */
 @SuppressWarnings("unchecked")
 public class EntitySchema extends SchemaSupport<Entity> {
