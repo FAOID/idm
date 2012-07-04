@@ -48,7 +48,7 @@ public class EntitySchema extends SchemaSupport<Entity> {
         	String childName = childDefinition.getName();
         	State childState = entity.getChildState(childName);
         	out.writeInt32(FIELD_CHILD_NODE_STATE, childState.intValue(), false);
-        	out.writeInt32(FIELD_CHILD_DEFINITION_ID, childDefinition.getId(), false);
+        	out.writeString(FIELD_CHILD_DEFINITION_ID, childDefinition.getName(), false);
         }
 	}
 
@@ -72,7 +72,6 @@ public class EntitySchema extends SchemaSupport<Entity> {
         		
         		// Node
         		readAndCheckFieldNumber(input, FIELD_NODE);
-        		System.out.println("abc definitionId = " + definitionId + ", entity = " + entity + ", input " + input) ;
         		input.mergeObject(node, getSchema(node.getClass()));
         		
         	} else if ( number == FIELD_CHILD_NODE_STATE ){
@@ -80,11 +79,8 @@ public class EntitySchema extends SchemaSupport<Entity> {
         		int intState = input.readInt32();
         		State state = State.parseState(intState);
         		readAndCheckFieldNumber(input, FIELD_CHILD_DEFINITION_ID);
-        		int childDefnId = input.readInt32();
-        		Schema schema = entity.getSchema();
-        		NodeDefinition childDefn = schema.getById(childDefnId);
-        		System.out.println("childDefnId = " + childDefnId + ", xyz entity = " + entity + ", input " + input + ", childDefn = " + childDefn) ;
-        		entity.childStates.put(childDefn.getName(), state);
+        		String childDefnName = input.readString();  		
+        		entity.childStates.put(childDefnName, state);
         	} else {
             	throw new ProtostuffException("Unexpected field number");
             }
