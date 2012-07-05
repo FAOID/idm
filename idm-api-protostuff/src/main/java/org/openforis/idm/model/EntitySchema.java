@@ -1,7 +1,9 @@
 package org.openforis.idm.model;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.NodeDefinition;
@@ -35,6 +37,10 @@ public class EntitySchema extends SchemaSupport<Entity> {
 
 	@Override
 	public void writeTo(Output out, Entity entity) throws IOException {
+		
+		boolean writeUsingAlpha3 = isExists("c:\\writeUsingAlpha3.properties");
+		
+		
 		List<Node<? extends NodeDefinition>> children = entity.getChildren();
         for(Node<?> node : children) {
         	if(isNodeToBeSaved(node)) {
@@ -47,13 +53,33 @@ public class EntitySchema extends SchemaSupport<Entity> {
         for (NodeDefinition childDefinition : childDefinitions) {
         	String childName = childDefinition.getName();
         	State childState = entity.getChildState(childName);
-        	out.writeInt32(FIELD_CHILD_NODE_STATE, childState.intValue(), false);
-        	out.writeString(FIELD_CHILD_DEFINITION_ID, childDefinition.getName(), false);
+        	if(writeUsingAlpha3)
+        	{
+	        	out.writeInt32(FIELD_CHILD_NODE_STATE, childState.intValue(), false);
+	        	out.writeInt32(FIELD_CHILD_DEFINITION_ID, childDefinition.getId(), false);
+        	}else{
+        		out.writeInt32(FIELD_CHILD_NODE_STATE, childState.intValue(), false);
+	        	out.writeString(FIELD_CHILD_DEFINITION_ID, childDefinition.getName(), false);
+        	}
         }
+	}
+
+	private boolean isExists(String filePath) {
+		boolean exists;
+		Properties properties = new Properties();
+		try {
+		    properties.load(new FileInputStream(filePath));
+		    exists = true;
+		} catch (IOException e) {
+			exists = false;
+		}
+		return exists;
 	}
 
 	@Override
 	public void mergeFrom(Input input, Entity entity) throws IOException {
+		boolean readUsingAlpha3 = isExists("c:\\readUsingAlpha3.properties");
+		
         for(int number = input.readFieldNumber(this); ; number = input.readFieldNumber(this))
         {
         	if ( number == 0 ) {
@@ -79,8 +105,18 @@ public class EntitySchema extends SchemaSupport<Entity> {
         		int intState = input.readInt32();
         		State state = State.parseState(intState);
         		readAndCheckFieldNumber(input, FIELD_CHILD_DEFINITION_ID);
-        		String childDefnName = input.readString();  		
-        		entity.childStates.put(childDefnName, state);
+        		if(readUsingAlpha3)
+        		{
+        			int childDefnId = input.readInt32();
+            		Schema schema = entity.getSchema();
+            		NodeDefinition childDefn = schema.getById(childDefnId);
+            		entity.childStates.put(childDefn.getName(), state);
+        			
+        		}else {
+        			String childDefnName = input.readString();  		
+            		entity.childStates.put(childDefnName, state);
+        		}
+        		
         	} else {
             	throw new ProtostuffException("Unexpected field number");
             }
