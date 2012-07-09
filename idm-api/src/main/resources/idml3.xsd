@@ -300,6 +300,10 @@
               </xs:element>
             </xs:sequence>
           </xs:complexType>
+		  <xs:unique name="versioningKey">
+            <xs:selector xpath="idml:version" />
+            <xs:field xpath="@id" />
+          </xs:unique>
         </xs:element>
 
         <!--~~~~~~~~~~~~-->
@@ -531,6 +535,10 @@
                           </xs:element>
                         </xs:sequence>
                       </xs:complexType>
+                      <xs:unique name="levelKey">
+						<xs:selector xpath="idml:level" />
+						<xs:field xpath="@id" />
+					  </xs:unique>
                     </xs:element>
                     <xs:element minOccurs="0" name="items">
                       <xs:annotation>
@@ -550,7 +558,7 @@
                           </xs:element>
                         </xs:sequence>
                       </xs:complexType>
-                      <xs:unique name="itemKey">
+                      <xs:unique name="codeListItemKey">
                         <xs:selector xpath="idml:item" />
                         <xs:field xpath="@id" />
                       </xs:unique>
@@ -589,6 +597,10 @@
               </xs:element>
             </xs:sequence>
           </xs:complexType>
+          <xs:unique name="listKey">
+            <xs:selector xpath="idml:list" />
+            <xs:field xpath="@id" />
+          </xs:unique>
         </xs:element>
 
         <!--~~~~~~~~~~~~~~~~~~~~~~-->
@@ -654,6 +666,10 @@
               </xs:element>
             </xs:sequence>
           </xs:complexType>
+          <xs:unique name="unitKey">
+            <xs:selector xpath="idml:unit" />
+            <xs:field xpath="@id" />
+          </xs:unique>
         </xs:element>
 
         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -711,6 +727,10 @@
               </xs:element>
             </xs:sequence>
           </xs:complexType>
+          <xs:unique name="spatialReferenceSystemKey">
+            <xs:selector xpath="idml:spatialReferenceSystem" />
+            <xs:field xpath="@srid" />
+          </xs:unique>
         </xs:element>
 
         <!--~~~~~~~~-->
@@ -739,6 +759,10 @@
               </xs:element>
             </xs:sequence>
           </xs:complexType>
+<!--           <xs:unique name="schemaObjectKey"> -->
+<!--             <xs:selector xpath="**"/> -->
+<!--             <xs:field xpath="@id"/> -->
+<!--           </xs:unique> -->
         </xs:element>
       </xs:sequence>
     </xs:complexType>
@@ -1127,7 +1151,7 @@
                           </xs:documentation>
                       </xs:annotation>
                     </xs:attribute>
-                    <xs:attribute name="highestRank" type="xs:string">
+                    <xs:attribute name="highestRank" type="taxonRank">
                       <xs:annotation>
                         <xs:documentation xml:lang="en">
                             TO-DO
@@ -1683,6 +1707,23 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!--     Taxon Rank        -->
+  <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+  <xs:simpleType name="taxonRank">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        TO-DO
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+		<xs:enumeration value="family" />
+		<xs:enumeration value="genus" />
+		<xs:enumeration value="species" />
+		<xs:enumeration value="subspecies" />
+	</xs:restriction>
+  </xs:simpleType>
+  
   <!--~~~~~~~~~~~~~~~~~~~~~~~-->
   <!-- Natural Language Text -->
   <!--~~~~~~~~~~~~~~~~~~~~~~~-->
