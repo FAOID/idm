@@ -1,6 +1,7 @@
 package org.openforis.idm.model;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.openforis.idm.metamodel.EntityDefinition;
@@ -19,6 +20,7 @@ import com.dyuproject.protostuff.ProtostuffException;
 @SuppressWarnings("unchecked")
 public class EntitySchema extends SchemaSupport<Entity> {
 
+	public static HashMap<Integer, NodeDefinition> hashDeleted = new HashMap<Integer, NodeDefinition>(); 
 	private static final int FIELD_DEFINITION_ID = 1;
 	private static final int FIELD_NODE = 2;
 	private static final int FIELD_CHILD_NODE_STATE = 3;
@@ -37,19 +39,28 @@ public class EntitySchema extends SchemaSupport<Entity> {
 	public void writeTo(Output out, Entity entity) throws IOException {
 		List<Node<? extends NodeDefinition>> children = entity.getChildren();
         for(Node<?> node : children) {
-        	if(isNodeToBeSaved(node)) {
+        	if(isNodeToBeSaved(node) && !tagForDeletion(node.definitionId)) {
 				out.writeUInt32(FIELD_DEFINITION_ID, node.definitionId, false);
 				out.writeObject(FIELD_NODE, node, getSchema(node.getClass()), false);
+        	}else{
+        		System.out.println("Skipping writing of " +  node.definitionId);
         	}
         }
+        
         EntityDefinition definition = entity.getDefinition();
         List<NodeDefinition> childDefinitions = definition.getChildDefinitions();
         for (NodeDefinition childDefinition : childDefinitions) {
         	String childName = childDefinition.getName();
         	State childState = entity.getChildState(childName);
-        	out.writeInt32(FIELD_CHILD_NODE_STATE, childState.intValue(), false);
-        	out.writeInt32(FIELD_CHILD_DEFINITION_ID, childDefinition.getId(), false);
+        	if(!tagForDeletion(childDefinition.getId())){
+        		out.writeInt32(FIELD_CHILD_NODE_STATE, childState.intValue(), false);
+        		out.writeInt32(FIELD_CHILD_DEFINITION_ID, childDefinition.getId(), false);
+        	}
         }
+	}
+
+	private boolean tagForDeletion(Integer definitionId) {
+		return hashDeleted.size()>0 &&  hashDeleted.containsKey(definitionId);		
 	}
 
 	@Override
