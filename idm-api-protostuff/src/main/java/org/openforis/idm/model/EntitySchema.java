@@ -42,8 +42,6 @@ public class EntitySchema extends SchemaSupport<Entity> {
         	if(isNodeToBeSaved(node) && !tagForDeletion(node.definitionId)) {
 				out.writeUInt32(FIELD_DEFINITION_ID, node.definitionId, false);
 				out.writeObject(FIELD_NODE, node, getSchema(node.getClass()), false);
-        	}else{
-        		System.out.println("Skipping writing of " +  node.definitionId);
         	}
         }
         
@@ -60,7 +58,11 @@ public class EntitySchema extends SchemaSupport<Entity> {
 	}
 
 	private boolean tagForDeletion(Integer definitionId) {
-		return hashDeleted.size()>0 &&  hashDeleted.containsKey(definitionId);		
+		boolean result = hashDeleted.size()>0 &&  hashDeleted.containsKey(definitionId);
+		if(result){
+			System.out.println("Skipping writing of " +  definitionId);
+		}
+		return result;
 	}
 
 	@Override
