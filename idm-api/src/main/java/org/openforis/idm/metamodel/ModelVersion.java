@@ -3,63 +3,103 @@
  */
 package org.openforis.idm.metamodel;
 
-import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-
-import org.openforis.idm.util.CollectionUtil;
 
 /**
  * @author G. Miceli
  * @author M. Togna
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "id", "name", "labels", "descriptions", "date" })
-public class ModelVersion implements Serializable {
+public class ModelVersion extends IdentifiableSurveyObject {
 
 	private static final long serialVersionUID = 1L;
 
-	@XmlAttribute(name = "id")
-	private int id;
-
-	@XmlAttribute(name = "name")
 	private String name;
-
-	@XmlElement(name = "label", type = LanguageSpecificText.class)
-	private List<LanguageSpecificText> labels;
-
-	@XmlElement(name = "description", type = LanguageSpecificText.class)
-	private List<LanguageSpecificText> descriptions;
-
-	@XmlElement(name = "date")
+	private LanguageSpecificTextMap labels;
+	private LanguageSpecificTextMap descriptions;
 	private String date;
 
-	public int getId() {
-		return id;
+	ModelVersion(Survey survey, int id) {
+		super(survey, id);
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public List<LanguageSpecificText> getLabels() {
-		return CollectionUtil.unmodifiableList(this.labels);
+		if ( this.labels == null ) {
+			return Collections.emptyList();
+		} else {
+			return this.labels.values();
+		}
+	}
+	
+	public String getLabel(String language) {
+		return labels == null ? null: labels.getText(language);
+	}
+	
+	public void addLabel(LanguageSpecificText label) {
+		if ( labels == null ) {
+			labels = new LanguageSpecificTextMap();
+		}
+		labels.add(label);
+	}
+
+	public void setLabel(String language, String text) {
+		if ( labels == null ) {
+			labels = new LanguageSpecificTextMap();
+		}
+		labels.setText(language, text);
+	}
+	
+	public void removeLabel(String language) {
+		labels.remove(language);
 	}
 
 	public List<LanguageSpecificText> getDescriptions() {
-		return CollectionUtil.unmodifiableList(descriptions);
+		if ( this.descriptions == null ) {
+			return Collections.emptyList();
+		} else {
+			return this.descriptions.values();
+		}
+	}
+
+	public String getDescription(String language) {
+		return descriptions == null ? null: descriptions.getText(language);
+	}
+	
+	public void setDescription(String language, String description) {
+		if ( descriptions == null ) {
+			descriptions = new LanguageSpecificTextMap();
+		}
+		descriptions.setText(language, description);
+	}
+	
+	public void addDescription(LanguageSpecificText description) {
+		if ( descriptions == null ) {
+			descriptions = new LanguageSpecificTextMap();
+		}
+		descriptions.add(description);
+	}
+
+	public void removeDescription(String language) {
+		descriptions.remove(language);
 	}
 
 	public String getDate() {
 		return date;
 	}
+	
+	public void setDate(String date) {
+		this.date = date;
+	}
 
-	public boolean isApplicable(Versionable versionable) {
+	public boolean isApplicable(VersionableSurveyObject versionable) {
 		ModelVersion since = versionable.getSinceVersion();
 		ModelVersion deprecated = versionable.getDeprecatedVersion();
 		if (since == null && deprecated == null) {
@@ -94,6 +134,7 @@ public class ModelVersion implements Serializable {
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((descriptions == null) ? 0 : descriptions.hashCode());
+		result = prime * result + getId();
 		result = prime * result + ((labels == null) ? 0 : labels.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -118,6 +159,8 @@ public class ModelVersion implements Serializable {
 				return false;
 		} else if (!descriptions.equals(other.descriptions))
 			return false;
+		if (getId() != other.getId())
+			return false;
 		if (labels == null) {
 			if (other.labels != null)
 				return false;
@@ -130,7 +173,5 @@ public class ModelVersion implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 }

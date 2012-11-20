@@ -5,11 +5,6 @@ package org.openforis.idm.metamodel;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
-
 import org.apache.commons.lang3.StringUtils;
 import org.openforis.idm.model.Attribute;
 import org.openforis.idm.model.Record;
@@ -23,31 +18,36 @@ import org.openforis.idm.model.expression.InvalidExpressionException;
  * @author G. Miceli
  * @author M. Togna
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "value", "expression", "condition" })
 public class AttributeDefault implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@XmlAttribute(name = "value")
 	private String value;
-
-	@XmlAttribute(name = "expr")
 	private String expression;
-
-	@XmlAttribute(name = "if")
 	private String condition;
-
+	
 	public String getValue() {
 		return value;
+	}
+	
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
 	public String getExpression() {
 		return this.expression;
 	}
+	
+	public void setExpression(String expression) {
+		this.expression = expression;
+	}
 
 	public String getCondition() {
 		return this.condition;
+	}
+	
+	public void setCondition(String condition) {
+		this.condition = condition;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -78,4 +78,42 @@ public class AttributeDefault implements Serializable {
 		Object object = defaultValueExpression.evaluate(attrib.getParent(), attrib);
 		return (V) object;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
+		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AttributeDefault other = (AttributeDefault) obj;
+		if (condition == null) {
+			if (other.condition != null)
+				return false;
+		} else if (!condition.equals(other.condition))
+			return false;
+		if (expression == null) {
+			if (other.expression != null)
+				return false;
+		} else if (!expression.equals(other.expression))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+	
 }

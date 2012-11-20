@@ -76,7 +76,7 @@ public class EntitySchema extends SchemaSupport<Entity> {
         		
         		// Definition id
         		int definitionId = input.readUInt32();
-        		NodeDefinition defn = idmSchema.getById(definitionId);
+        		NodeDefinition defn = idmSchema.getDefinitionById(definitionId);
         		if ( defn == null ) {
         			throw new ProtostuffException("Invalid definition id "+definitionId);
         		}
@@ -94,7 +94,7 @@ public class EntitySchema extends SchemaSupport<Entity> {
         		readAndCheckFieldNumber(input, FIELD_CHILD_DEFINITION_ID);
         		int childDefnId = input.readInt32();
         		Schema schema = entity.getSchema();
-        		NodeDefinition childDefn = schema.getById(childDefnId);
+        		NodeDefinition childDefn = schema.getDefinitionById(childDefnId);
         		entity.childStates.put(childDefn.getName(), state);
         	} else {
             	throw new ProtostuffException("Unexpected field number");

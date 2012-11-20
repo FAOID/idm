@@ -1,5 +1,7 @@
 package org.openforis.idm.model;
 
+import org.openforis.idm.metamodel.Languages;
+import org.openforis.idm.metamodel.Languages.Standard;
 import org.openforis.idm.metamodel.TaxonAttributeDefinition;
 
 /**
@@ -9,11 +11,11 @@ import org.openforis.idm.metamodel.TaxonAttributeDefinition;
 public class TaxonAttribute extends Attribute<TaxonAttributeDefinition, TaxonOccurrence> {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	public TaxonAttribute(TaxonAttributeDefinition definition) {
 		super(definition);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public Field<String> getCodeField() {
 		return (Field<String>) getField(0);
@@ -61,8 +63,11 @@ public class TaxonAttribute extends Attribute<TaxonAttributeDefinition, TaxonOcc
 		return getLanguageCodeField().getValue();
 	}
 	
-	public void setLanguageCode(String lang) {
-		getLanguageCodeField().setValue(lang);
+	public void setLanguageCode(String code) {
+		if ( code != null && ! Languages.exists(Standard.ISO_639_3, code) ) {
+			throw new LanguageCodeNotSupportedException("Language code not supported: " + code);
+		}
+		getLanguageCodeField().setValue(code);
 		onUpdateValue();
 	}
 
@@ -78,10 +83,10 @@ public class TaxonAttribute extends Attribute<TaxonAttributeDefinition, TaxonOcc
 	@Override
 	public TaxonOccurrence getValue() {
 		String code = getCodeField().getValue();
-		String scientificName = getScientificNameField().getValue();
-		String vernacularName = getVernacularNameField().getValue();
-		String languageCode = getLanguageCodeField().getValue();
-		String languageVariety = getLanguageVarietyField().getValue();
+		String scientificName = getScientificName();
+		String vernacularName = getVernacularName();
+		String languageCode = getLanguageCode();
+		String languageVariety = getLanguageVariety();
 		return new TaxonOccurrence(code, scientificName, vernacularName, languageCode, languageVariety);
 	}
 
@@ -97,11 +102,33 @@ public class TaxonAttribute extends Attribute<TaxonAttributeDefinition, TaxonOcc
 			String languageVariety = value.getLanguageVariety();
 	
 			getCodeField().setValue(code);
-			getScientificNameField().setValue(scientificName);
-			getVernacularNameField().setValue(vernacularName);
-			getLanguageCodeField().setValue(languageCode);
-			getLanguageVarietyField().setValue(languageVariety);
+			setScientificName(scientificName);
+			setVernacularName(vernacularName);
+			setLanguageCode(languageCode);
+			setLanguageVariety(languageVariety);
 		}
 		onUpdateValue();
+	}
+	
+	public static class LanguageCodeNotSupportedException extends RuntimeException {
+
+		private static final long serialVersionUID = 1L;
+
+		public LanguageCodeNotSupportedException() {
+			super();
+		}
+
+		public LanguageCodeNotSupportedException(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		public LanguageCodeNotSupportedException(String message) {
+			super(message);
+		}
+
+		public LanguageCodeNotSupportedException(Throwable cause) {
+			super(cause);
+		}
+		
 	}
 }
