@@ -9,6 +9,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public final class TaxonOccurrence implements Value {
 
+	private int systemId;
+	public int getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(int systemId) {
+		this.systemId = systemId;
+	}
+
 	private String code;
 	private String scientificName;
 	private String vernacularName;
@@ -19,8 +28,9 @@ public final class TaxonOccurrence implements Value {
 		super();
 	}
 
-	public TaxonOccurrence(String code, String scientificName) {
+	public TaxonOccurrence(int systemId, String code, String scientificName) {
 		super();
+		this.systemId = systemId;
 		this.code = code;
 		this.scientificName = scientificName;
 	}
